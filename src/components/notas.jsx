@@ -26,7 +26,7 @@ import InfoIcon from "@mui/icons-material/Info";
 
 export default function NotaCard({ nota }) {
 	return (
-		<div className="m-1 flex justify-center">
+		<div className="flex justify-center">
 			<Card className="rounded-3xl bg-indigo-700" sx={{ maxWidth: 390 }}>
 				<CardContent>
 					<div className="flex justify-between items-center gap-5">

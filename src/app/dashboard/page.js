@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Button, Fab, Typography } from "@mui/material";
 import NotaCard from "@/components/notas";
 import AddIcon from "@mui/icons-material/Add";
+import FilterMenu from '../../components/filterMenu';
 
 export default function Dashboard() {
 	const { authUser, isLoading } = useAuth();
@@ -25,11 +26,7 @@ export default function Dashboard() {
 					Aqui você pode subir uma nota para a analise.
 				</Typography>
 			</div>
-			{/* <div className="flex">
-				<Button variant="outlined">
-					<Typography variant="body1">Subir Nota</Typography>
-				</Button>
-			</div> */}
+			<FilterMenu />
 			<div
 				className="flex flex-col gap-2 md:grid md:grid-cols-3"
 				style={{ marginBottom: "50px" }}
@@ -48,7 +45,7 @@ export default function Dashboard() {
 			</div>
 			<Fab
 				variant="extended"
-				className="bg-indigo-700 hover:bg-indigo-700"
+				className="bg-purple-950 hover:bg-purple-950 shadow-lg"
 				aria-label="add"
 				sx={{ position: "fixed", bottom: "10px", right: "10px" }}
 			>
