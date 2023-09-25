@@ -21,33 +21,29 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { Avatar, IconButton } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 
 export default function NotaCard({ nota }) {
 	return (
-		<Card sx={{ maxWidth: 345 }}>
-			<CardContent>
-				<Typography gutterBottom variant="h6" component="div">
-					22/09/2023
-				</Typography>
-				<div className="grid grid-cols-2">
-					<Typography variant="body2" color="text.secondary">
-						11.25
-					</Typography>
-					<Typography variant="body2" color="text.secondary">
-						11.25
-					</Typography>
-					<Typography variant="body2" color="text.secondary">
-						11.25
-					</Typography>
-					<Typography variant="body2" color="text.secondary">
-						11.25
-					</Typography>
-				</div>
-			</CardContent>
-			<CardActions>
-				<Button size="small">Share</Button>
-				<Button size="small">Learn More</Button>
-			</CardActions>
-		</Card>
+		<div className="m-1 flex justify-center">
+			<Card className="rounded-3xl bg-indigo-700" sx={{ maxWidth: 390 }}>
+				<CardContent>
+					<div className="flex justify-between items-center gap-5">
+						<Avatar />
+						<div className="flex flex-col items-center">
+							<Typography variant="body1">22/09/2023</Typography>
+							<Typography variant="body1">Comida</Typography>
+						</div>
+						<Typography variant="body1" fontWeight="bold">
+							R$ 45.000,00
+						</Typography>
+						<IconButton aria-label="info" size="large">
+							<InfoIcon />
+						</IconButton>
+					</div>
+				</CardContent>
+			</Card>
+		</div>
 	);
 }
