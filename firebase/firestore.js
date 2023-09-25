@@ -21,35 +21,37 @@ const RECEIPT_COLLECTION = process.env(
     - id: string
     - img: string
     - img_processada: string
-    - tipo: string
-    - data: string
+    - tipo: string API
+    - data: string OCR
     - finalidade: string?
-    - cidade: string
-    - moeda: string
-    - tipo_pagamento: string
-    - valor: number
-    - pessoal: boolean
-    - fornecedor: string
+    - cidade: string API
+    - moeda: string OCR/regex
+    - tipo_pagamento: string /OCR
+    - valor: number / OCR
+    - pessoal: boolean 
+    - fornecedor: string / CNPJ
 */
-export function addReceipt(
-	uid,
-	date,
-	locationName,
-	address,
-	items,
-	amount,
-	imageBucket
-) {
-	addDoc(collection(db, RECEIPT_COLLECTION), {
-		uid,
-		date,
-		locationName,
-		address,
-		items,
-		amount,
-		imageBucket,
-	});
-}
+
+// TODO - Add receipt to database
+// export function addReceipt(
+// 	uid,
+// 	date,
+// 	locationName,
+// 	address,
+// 	items,
+// 	amount,
+// 	imageBucket
+// ) {
+// 	addDoc(collection(db, RECEIPT_COLLECTION), {
+// 		uid,
+// 		date,
+// 		locationName,
+// 		address,
+// 		items,
+// 		amount,
+// 		imageBucket,
+// 	});
+// }
 
 export async function getReceipts(uid, isConfirmed) {
 	const receipts = query(
@@ -64,7 +66,7 @@ export async function getReceipts(uid, isConfirmed) {
 		const receipt = documentSnapshot.data();
 		await allReceipts.push({
 			...receipt,
-			date: receipt["date"],
+			date: receipt["date"].toDate(),
 			id: documentSnapshot.id,
 			uid: receipt["uid"],
 			imageUrl: await getDownloadURL(receipt["imageBucket"]),

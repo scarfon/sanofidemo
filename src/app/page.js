@@ -1,5 +1,12 @@
 "use client";
-import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	CircularProgress,
+	Divider,
+	TextField,
+	Typography,
+} from "@mui/material";
 import { auth } from "../../firebase/firebase";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -69,7 +76,9 @@ export default function Home() {
 	const buttonText = isLogin ? "LOGIN" : "CRIAR CONTA";
 	const toggleText = isLogin ? "Registrarse" : "Login";
 
-	return (
+	return isLoading || (!isLoading && !!authUser) ? (
+		<CircularProgress sx={{ position: "absolute", left: "50%", top: "50%" }} />
+	) : (
 		<div className="flex flex-col justify-center items-center h-screen gap-3">
 			<Image src={"/logo.svg"} width={300} height={300} />
 			<Typography variant="h5" className="text-center">
