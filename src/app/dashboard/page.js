@@ -7,14 +7,22 @@ import { useRouter } from "next/navigation";
 import { Button, Fab, Typography } from "@mui/material";
 import NotaCard from "@/components/notas";
 import AddIcon from "@mui/icons-material/Add";
+import { getReceipts } from "../../../firebase/firestore";
 
 export default function Dashboard() {
 	const { authUser, isLoading } = useAuth();
+	const [notas, setNotas] = useState([]);
 	const router = useRouter();
 
 	useEffect(() => {
 		if (!isLoading && !authUser) router.push("/");
 	}, [authUser, isLoading]);
+
+	useEffect(async () => {
+		if (authUser) {
+			setNotas(await getReceipts(authUser.uid));
+		}
+	}, [authUser]);
 
 	return (
 		<div>
@@ -34,6 +42,9 @@ export default function Dashboard() {
 				className="flex flex-col gap-2 md:grid md:grid-cols-3"
 				style={{ marginBottom: "50px" }}
 			>
+				{notas.map((nota) => {
+					return <NotaCard nota={nota} />;
+				})}
 				<NotaCard />
 				<NotaCard />
 				<NotaCard />
