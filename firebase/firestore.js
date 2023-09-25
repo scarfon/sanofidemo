@@ -53,11 +53,11 @@ const RECEIPT_COLLECTION = process.env(
 // 	});
 // }
 
-export async function getReceipts(uid, isConfirmed) {
+export async function getReceipts(uid) {
 	const receipts = query(
 		collection(db, RECEIPT_COLLECTION),
 		where("uid", "==", uid),
-		where("isConfirmed", "==", isConfirmed)
+		orderBy("transactionDate", "desc")
 	);
 	const snapshot = await getDocs(receipts);
 
@@ -66,25 +66,9 @@ export async function getReceipts(uid, isConfirmed) {
 		const receipt = documentSnapshot.data();
 		await allReceipts.push({
 			...receipt,
-			date: receipt["date"].toDate(),
+			transactionDate: receipt["transactionDate"].toDate(),
 			id: documentSnapshot.id,
-			uid: receipt["uid"],
 			imageUrl: await getDownloadURL(receipt["imageBucket"]),
-			imageBucket: receipt["imageBucket"],
-			uuid: receipt["uuid"],
-			imgUrl: receipt["imgUrl"],
-			merchantName: receipt["merchantName"],
-			merchantNameConfidence: receipt["merchantNameConfidence"],
-			transactionDate: receipt["transactionDate"],
-			transactionDateConfidence: receipt["transactionDateConfidence"],
-			subtotal: receipt["subtotal"],
-			subtotalConfidence: receipt["subtotalConfidence"],
-			tax: receipt["tax"],
-			taxConfidence: receipt["taxConfidence"],
-			tip: receipt["tip"],
-			tipConfidence: receipt["tipConfidence"],
-			total: receipt["total"],
-			totalConfidence: receipt["totalConfidence"],
 		});
 	}
 	return allReceipts;
@@ -94,7 +78,6 @@ export async function getReceipts(uid, isConfirmed) {
 export function updateReceipt(
 	docId,
 	uid,
-	date,
 	imageBucket,
 	isConfirmed,
 	merchantName,
@@ -106,7 +89,6 @@ export function updateReceipt(
 ) {
 	setDoc(doc(db, RECEIPT_COLLECTION, docId), {
 		uid,
-		date,
 		imageBucket,
 		isConfirmed,
 		merchantName,
