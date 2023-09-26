@@ -12,9 +12,8 @@ import {
 import { db } from "./firebase";
 import { getDownloadURL } from "./storage";
 
-const RECEIPT_COLLECTION = process.env(
-	NEXT_PUBLIC_FIREBASE_FIRESTORE_RECEIPT_COLLECTION
-);
+const RECEIPT_COLLECTION =
+	process.env.NEXT_PUBLIC_FIREBASE_FIRESTORE_RECEIPT_COLLECTION;
 
 /*
   - nota: array de objetos
@@ -64,9 +63,9 @@ export async function getReceipts(uid) {
 	let allReceipts = [];
 	for (const documentSnapshot of snapshot.docs) {
 		const receipt = documentSnapshot.data();
-		await allReceipts.push({
+		allReceipts.push({
 			...receipt,
-			transactionDate: receipt["transactionDate"].toDate(),
+			transactionDate: new Date(receipt["transactionDate"]),
 			id: documentSnapshot.id,
 			imageUrl: await getDownloadURL(receipt["imageBucket"]),
 		});
