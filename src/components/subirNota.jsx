@@ -41,13 +41,13 @@ export default function SubirNotaModal({ open, handleClose }) {
 
 	const handleSubmit = async () => {
 		setLoading(true);
-		// await uploadImage(file, authUser.uid);
-		// setLoading(false);
-		// setSuccess(true);
-		setTimeout(() => {
-			setLoading(false);
-			setSuccess(true);
-		}, 5000);
+		await uploadImage(file, authUser.uid);
+		setLoading(false);
+		setSuccess(true);
+		// setTimeout(() => {
+		// 	setLoading(false);
+		// 	setSuccess(true);
+		// }, 5000);
 	};
 
 	return (
