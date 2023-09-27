@@ -23,6 +23,20 @@ export default function FilterMenu({ onFilterChange }) {
 		onFilterChange(newSelectedItemId[index]);
 	};
 
+	const handleCloseOut = (index) => {
+		const newAnchorEl = [...anchorEl];
+		newAnchorEl[index] = null;
+		setAnchorEl(newAnchorEl);
+	};
+
+	const style = {
+		// position: "absolute",
+		// top: "50%",
+		// left: "50%",
+		// transform: "translate(-50%, -50%)",
+		backgroundColor: "#312e81 !important",
+	};
+
 	return (
 		<div className="mb-2 flex justify-center p-2 gap-2">
 			{/* <Button
@@ -65,19 +79,10 @@ export default function FilterMenu({ onFilterChange }) {
 				Data <FilterListIcon />
 			</Button>
 			<Menu
-				id="filter-menu-2"
+				id="DA"
 				open={open[1]}
-				onClose={(event) => handleClose(1, event)}
+				onClose={() => handleCloseOut(1)}
 				getContentAnchorEl={null}
-				PaperProps={{
-					elevation: 0,
-					sx: {
-						borderRadius: 2,
-						minWidth: 200,
-						color: "text.primary",
-						backgroundColor: "background.paper",
-					},
-				}}
 			>
 				<MenuItem id="DATA_DESC" onClick={(event) => handleClose(1, event)}>
 					Data mais recente
@@ -94,19 +99,10 @@ export default function FilterMenu({ onFilterChange }) {
 				Valor <FilterListIcon />
 			</Button>
 			<Menu
-				id="filter-menu-3"
+				id="VALOR_DESC"
 				open={open[2]}
-				onClose={(event) => handleClose(2, event)}
+				onClose={() => handleCloseOut(2)}
 				getContentAnchorEl={null}
-				PaperProps={{
-					elevation: 0,
-					sx: {
-						borderRadius: 2,
-						minWidth: 200,
-						color: "text.primary",
-						backgroundColor: "background.paper",
-					},
-				}}
 			>
 				<MenuItem id="VALOR_DESC" onClick={(event) => handleClose(2, event)}>
 					Valor maior

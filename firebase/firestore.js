@@ -54,7 +54,7 @@ const RECEIPT_COLLECTION =
 
 export async function getReceipts(uid, filter) {
 	let receipts;
-	if (filter === "DATA_DESC" || filter === "VALOR_DESC" || filter === null) {
+	if (filter === "DATA_DESC" || filter === null) {
 		receipts = query(
 			collection(db, RECEIPT_COLLECTION),
 			where("uid", "==", uid),
@@ -72,8 +72,13 @@ export async function getReceipts(uid, filter) {
 		receipts = query(
 			collection(db, RECEIPT_COLLECTION),
 			where("uid", "==", uid),
-			orderBy("transactionDate", "desc"),
 			orderBy("total", "asc")
+		);
+	} else if (filter === "VALOR_DESC") {
+		receipts = query(
+			collection(db, RECEIPT_COLLECTION),
+			where("uid", "==", uid),
+			orderBy("total", "desc")
 		);
 	}
 
@@ -96,28 +101,18 @@ export async function getReceipts(uid, filter) {
 }
 
 // Updates receipt with @docId with given information.
-export function updateReceipt(
-	docId,
-	uid,
-	imageBucket,
-	isConfirmed,
-	merchantName,
-	transactionDate,
-	subtotal,
-	tax,
-	tip,
-	total
-) {
-	setDoc(doc(db, RECEIPT_COLLECTION, docId), {
-		uid,
-		imageBucket,
-		isConfirmed,
-		merchantName,
-		transactionDate,
-		subtotal,
-		tax,
-		tip,
-		total,
+export function updateReceipt(nota) {
+	setDoc(doc(db, RECEIPT_COLLECTION, nota.id), {
+		...nota,
+		cidade: nota.cidade,
+		transactionDate: nota.transactionDate
+			? nota.transactionDate.toISOString().slice(0, 10)
+			: "",
+		cnpj: nota.cnpj,
+		merchantName: nota.merchantName,
+		tipo: nota.tipo,
+		tipo_pagamento: nota.tipo_pagamento,
+		total: nota.total,
 	});
 }
 
