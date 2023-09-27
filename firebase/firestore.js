@@ -82,9 +82,12 @@ export async function getReceipts(uid, filter) {
 	let allReceipts = [];
 	for (const documentSnapshot of snapshot.docs) {
 		const receipt = documentSnapshot.data();
-		allReceipts.push({
+		const transactionDate = receipt["transactionDate"]
+			? new Date(receipt["transactionDate"])
+			: new Date();
+		await allReceipts.push({
 			...receipt,
-			transactionDate: new Date(receipt["transactionDate"]),
+			transactionDate,
 			id: documentSnapshot.id,
 			imageUrl: await getDownloadURL(receipt["imageBucket"]),
 		});
