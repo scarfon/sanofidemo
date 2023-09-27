@@ -26,13 +26,19 @@ export default function Dashboard() {
 		if (!isLoading && !authUser) router.push("/");
 		async function fetchNotas() {
 			if (authUser) {
-				setNotas(await getReceipts(authUser.uid));
+				setNotas(await getReceipts(authUser.uid, null));
 				setIsLoadingNotas(false);
 			}
 		}
 		fetchNotas();
 	}, [authUser, isLoading]);
 
+	const filterNotas = async (filter) => {
+		console.log(filter);
+		setIsLoadingNotas(true);
+		setNotas(await getReceipts(authUser.uid, filter));
+		setIsLoadingNotas(false);
+	};
 	return !authUser || isLoadingNotas ? (
 		<CircularProgress sx={{ position: "absolute", left: "50%", top: "50%" }} />
 	) : (
@@ -44,7 +50,7 @@ export default function Dashboard() {
 					Aqui você pode subir uma nota para a analise.
 				</Typography>
 			</div>
-			<FilterMenu />
+			<FilterMenu onFilterChange={filterNotas} />
 			<div
 				className="flex flex-col gap-2 md:grid md:grid-cols-3"
 				style={{ marginBottom: "50px" }}
@@ -66,9 +72,15 @@ export default function Dashboard() {
 			</div>
 			<Fab
 				variant="extended"
-				className="bg-purple-950 hover:bg-purple-950 shadow-lg"
+				className="shadow-lg"
 				aria-label="add"
-				sx={{ position: "fixed", bottom: "10px", right: "10px" }}
+				sx={{
+					position: "fixed",
+					bottom: "10px",
+					right: "10px",
+					backgroundColor: "#581c87 !important",
+					"&:hover": { backgroundColor: "#581c87" },
+				}}
 				onClick={handleOpen}
 			>
 				<AddIcon className="text-zinc-200" />

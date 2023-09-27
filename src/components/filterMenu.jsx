@@ -2,51 +2,40 @@ import React, { useState } from "react";
 import { Button, Menu, MenuItem } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 
-export default function FilterMenu() {
-	const [anchorEl1, setAnchorEl1] = useState(null);
-	const [anchorEl2, setAnchorEl2] = useState(null);
-	const [anchorEl3, setAnchorEl3] = useState(null);
-	const open1 = Boolean(anchorEl1);
-	const open2 = Boolean(anchorEl2);
-	const open3 = Boolean(anchorEl3);
+export default function FilterMenu({ onFilterChange }) {
+	const [anchorEl, setAnchorEl] = useState([null, null, null]);
+	const [selectedItemId, setSelectedItemId] = useState([null, null, null]);
+	const open = anchorEl.map((el) => Boolean(el));
 
-	const handleClick1 = (event) => {
-		setAnchorEl1(event.currentTarget);
+	const handleClick = (index, event) => {
+		const newAnchorEl = [...anchorEl];
+		newAnchorEl[index] = event.currentTarget;
+		setAnchorEl(newAnchorEl);
 	};
 
-	const handleClick2 = (event) => {
-		setAnchorEl2(event.currentTarget);
-	};
-
-	const handleClick3 = (event) => {
-		setAnchorEl3(event.currentTarget);
-	};
-
-	const handleClose1 = () => {
-		setAnchorEl1(null);
-	};
-
-	const handleClose2 = () => {
-		setAnchorEl2(null);
-	};
-
-	const handleClose3 = () => {
-		setAnchorEl3(null);
+	const handleClose = (index, event) => {
+		const newSelectedItemId = [...selectedItemId];
+		newSelectedItemId[index] = event.target.id;
+		setSelectedItemId(newSelectedItemId);
+		const newAnchorEl = [...anchorEl];
+		newAnchorEl[index] = null;
+		setAnchorEl(newAnchorEl);
+		onFilterChange(newSelectedItemId[index]);
 	};
 
 	return (
 		<div className="mb-2 flex justify-center p-2 gap-2">
-			<Button
+			{/* <Button
 				id="filter-menu-button-1"
 				variant="outlined"
-				onClick={handleClick1}
+				onClick={(event) => handleClick(0, event)}
 			>
 				Status <FilterListIcon />
 			</Button>
 			<Menu
 				id="filter-menu-1"
-				open={open1}
-				onClose={handleClose1}
+				open={open[0]}
+				onClose={(event) => handleClose(0, event)}
 				getContentAnchorEl={null}
 				PaperProps={{
 					elevation: 0,
@@ -58,21 +47,27 @@ export default function FilterMenu() {
 					},
 				}}
 			>
-				<MenuItem onClick={handleClose1}>Todos</MenuItem>
-				<MenuItem onClick={handleClose1}>Aprovados</MenuItem>
-				<MenuItem onClick={handleClose1}>Reprovados</MenuItem>
-			</Menu>
-            <Button
+				<MenuItem id="todos" onClick={(event) => handleClose(0, event)}>
+					Todos
+				</MenuItem>
+				<MenuItem id="aprovados" onClick={(event) => handleClose(0, event)}>
+					Aprovados
+				</MenuItem>
+				<MenuItem id="reprovados" onClick={(event) => handleClose(0, event)}>
+					Reprovados
+				</MenuItem>
+			</Menu> */}
+			<Button
 				id="filter-menu-button-2"
 				variant="outlined"
-				onClick={handleClick2}
+				onClick={(event) => handleClick(1, event)}
 			>
 				Data <FilterListIcon />
 			</Button>
 			<Menu
 				id="filter-menu-2"
-				open={open2}
-				onClose={handleClose2}
+				open={open[1]}
+				onClose={(event) => handleClose(1, event)}
 				getContentAnchorEl={null}
 				PaperProps={{
 					elevation: 0,
@@ -84,20 +79,24 @@ export default function FilterMenu() {
 					},
 				}}
 			>
-                <MenuItem onClick={handleClose2}>Data mais recente</MenuItem>
-                <MenuItem onClick={handleClose2}>Data mais antiga</MenuItem>
+				<MenuItem id="DATA_DESC" onClick={(event) => handleClose(1, event)}>
+					Data mais recente
+				</MenuItem>
+				<MenuItem id="DATA_ASC" onClick={(event) => handleClose(1, event)}>
+					Data mais antiga
+				</MenuItem>
 			</Menu>
-            <Button
+			<Button
 				id="filter-menu-button-3"
 				variant="outlined"
-				onClick={handleClick3}
+				onClick={(event) => handleClick(2, event)}
 			>
 				Valor <FilterListIcon />
 			</Button>
 			<Menu
 				id="filter-menu-3"
-				open={open3}
-				onClose={handleClose3}
+				open={open[2]}
+				onClose={(event) => handleClose(2, event)}
 				getContentAnchorEl={null}
 				PaperProps={{
 					elevation: 0,
@@ -109,9 +108,13 @@ export default function FilterMenu() {
 					},
 				}}
 			>
-                <MenuItem onClick={handleClose3}>Valor maior</MenuItem>
-                <MenuItem onClick={handleClose3}>Valor menor</MenuItem>
+				<MenuItem id="VALOR_DESC" onClick={(event) => handleClose(2, event)}>
+					Valor maior
+				</MenuItem>
+				<MenuItem id="VALOR_ASC" onClick={(event) => handleClose(2, event)}>
+					Valor menor
+				</MenuItem>
 			</Menu>
-        </div>
-    );
+		</div>
+	);
 }

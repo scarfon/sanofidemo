@@ -52,12 +52,31 @@ const RECEIPT_COLLECTION =
 // 	});
 // }
 
-export async function getReceipts(uid) {
-	const receipts = query(
-		collection(db, RECEIPT_COLLECTION),
-		where("uid", "==", uid),
-		orderBy("transactionDate", "desc")
-	);
+export async function getReceipts(uid, filter) {
+	let receipts;
+	if (filter === "DATA_DESC" || filter === "VALOR_DESC" || filter === null) {
+		receipts = query(
+			collection(db, RECEIPT_COLLECTION),
+			where("uid", "==", uid),
+			orderBy("transactionDate", "desc"),
+			orderBy("total", "desc")
+		);
+	} else if (filter === "DATA_ASC") {
+		receipts = query(
+			collection(db, RECEIPT_COLLECTION),
+			where("uid", "==", uid),
+			orderBy("transactionDate", "asc"),
+			orderBy("total", "desc")
+		);
+	} else if (filter === "VALOR_ASC") {
+		receipts = query(
+			collection(db, RECEIPT_COLLECTION),
+			where("uid", "==", uid),
+			orderBy("transactionDate", "desc"),
+			orderBy("total", "asc")
+		);
+	}
+
 	const snapshot = await getDocs(receipts);
 
 	let allReceipts = [];
