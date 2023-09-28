@@ -90,6 +90,7 @@ export async function getReceipts(uid, filter) {
 		const transactionDate = receipt["transactionDate"]
 			? new Date(receipt["transactionDate"])
 			: new Date();
+		transactionDate.setDate(transactionDate.getDate() + 1); // add one day
 		await allReceipts.push({
 			...receipt,
 			transactionDate,
