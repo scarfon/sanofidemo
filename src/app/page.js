@@ -64,7 +64,7 @@ export default function Home() {
 			);
 			router.push("/dashboard");
 		} catch (error) {
-			console.error(error);
+			console.error(error.message);
 			setError(error.message);
 		}
 	};
@@ -88,6 +88,7 @@ export default function Home() {
 				className="w-80 "
 				sx={{ display: "flex", flexDirection: "column", gap: 2 }}
 			>
+				{/* <Typography value={error ? error : ""} /> */}
 				<TextField
 					label="Email"
 					variant="outlined"
