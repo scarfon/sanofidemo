@@ -18,20 +18,46 @@ import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { Avatar, IconButton, Modal } from "@mui/material";
+import { Avatar, Button, IconButton, Modal, TextField } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
+import EditIcon from "@mui/icons-material/Edit";
 import { format } from "date-fns";
 import Image from "next/image";
+import { updateReceipt } from "../../firebase/firestore";
 
 export default function NotaCard({ nota }) {
-	const [open, setOpen] = React.useState(false);
+	const [openView, setOpenView] = React.useState(false);
+	const [openEdit, setOpenEdit] = React.useState(false);
+	const [editedNota, setEditedNota] = React.useState(nota);
 
-	const handleOpen = () => {
-		setOpen(true);
+	const handleOpenView = () => {
+		setOpenView(true);
 	};
 
-	const handleClose = () => {
-		setOpen(false);
+	const handleCloseView = () => {
+		setOpenView(false);
+	};
+
+	const handleOpenEdit = () => {
+		setOpenEdit(true);
+	};
+
+	const handleCloseEdit = () => {
+		setOpenEdit(false);
+	};
+
+	const handleSave = () => {
+		console.log(editedNota);
+		updateReceipt(editedNota);
+		handleCloseEdit();
+	};
+
+	const handleInputChange = (event) => {
+		const { name, value } = event.target;
+		setEditedNota((prevNota) => ({
+			...prevNota,
+			[name]: value,
+		}));
 	};
 
 	return (
@@ -43,29 +69,48 @@ export default function NotaCard({ nota }) {
 				<CardContent>
 					<div className="flex justify-between items-center gap-2">
 						<Avatar src={nota.img_proc_url || ""} />
-						<div className="flex flex-col items-center">
+						<div className="flex flex-col items-center flex-grow w-32">
 							<Typography variant="body1">
 								{format(nota.transactionDate, "dd/MM/yy") || ""}
 							</Typography>
-							<Typography className="text-center" variant="body1">
+							<Typography className="text-center" variant="body2">
 								{nota.tipo || "COMIDA"}
 							</Typography>
 						</div>
-						<Typography className="flex-grow" variant="body1" fontWeight="bold">
+						<Typography
+							className="flex-grow "
+							variant="body1"
+							fontWeight="bold"
+						>
 							{(nota.moeda || "R$") +
 								" " +
 								(nota.total.toString().replace(".", ",") || "")}
 						</Typography>
-						<IconButton aria-label="info" size="large" onClick={handleOpen}>
-							<InfoIcon />
-						</IconButton>
+						<div className="flex">
+							<IconButton
+								sx={{ padding: 0.5 }}
+								aria-label="info"
+								size="large"
+								onClick={handleOpenEdit}
+							>
+								<EditIcon />
+							</IconButton>
+							<IconButton
+								sx={{ padding: 0.5 }}
+								aria-label="info"
+								size="large"
+								onClick={handleOpenView}
+							>
+								<InfoIcon />
+							</IconButton>
+						</div>
 					</div>
 				</CardContent>
 			</Card>
 			<Modal
 				className="flex justify-center items-end"
-				open={open}
-				onClose={handleClose}
+				open={openView}
+				onClose={handleCloseView}
 			>
 				<div className="bg-indigo-700 p-4 rounded-lg flex flex-col items-center max-w-sm ">
 					<Typography variant="h5" gutterBottom>
@@ -100,6 +145,83 @@ export default function NotaCard({ nota }) {
 								" " +
 								(nota.total.toString().replace(".", ",") || "")}
 						</Typography>
+					</div>
+				</div>
+			</Modal>
+			<Modal open={openEdit} onClose={handleCloseEdit}>
+				<div className="bg-indigo-700 p-4 rounded-lg flex flex-col items-center max-w-sm ">
+					<Typography variant="h5" gutterBottom>
+						Editar Nota
+					</Typography>
+					<div className="flex flex-col items-center">
+						<TextField
+							label="Fornecedor"
+							name="merchantName"
+							value={editedNota.merchantName}
+							onChange={handleInputChange}
+							margin="normal"
+							variant="outlined"
+						/>
+						<TextField
+							label="CNPJ"
+							name="cnpj"
+							value={editedNota.cnpj}
+							onChange={handleInputChange}
+							margin="normal"
+							variant="outlined"
+						/>
+						<TextField
+							label="Cidade"
+							name="cidade"
+							value={editedNota.cidade}
+							onChange={handleInputChange}
+							margin="normal"
+							variant="outlined"
+						/>
+
+						{/* <TextField
+							label="Data"
+							name="transactionDate"
+							type="date"
+							value={
+								editedNota.transactionDate
+									? format(new Date(editedNota.transactionDate), "yyyy-MM-dd")
+									: ""
+							}
+							onChange={handleInputChange}
+							margin="normal"
+							variant="outlined"
+							InputLabelProps={{
+								shrink: true,
+							}}
+						/> */}
+						<TextField
+							label="Tipo"
+							name="tipo"
+							value={editedNota.tipo}
+							onChange={handleInputChange}
+							margin="normal"
+							variant="outlined"
+						/>
+						<TextField
+							label="Pagamento"
+							name="tipo_pagamento"
+							value={editedNota.tipo_pagamento}
+							onChange={handleInputChange}
+							margin="normal"
+							variant="outlined"
+						/>
+						<TextField
+							label="Total"
+							name="total"
+							value={editedNota.total}
+							onChange={handleInputChange}
+							margin="normal"
+							variant="outlined"
+						/>
+						<Button variant="contained" onClick={handleSave}>
+							Salvar
+						</Button>
 					</div>
 				</div>
 			</Modal>
