@@ -9,7 +9,10 @@ import NotaCard from "@/components/notas";
 import AddIcon from "@mui/icons-material/Add";
 import FilterMenu from "../../components/filterMenu";
 import { getReceipts } from "../../../firebase/firestore";
+import { rtdb } from "../../../firebase/firebase";
 import SubirNotaModal from "@/components/subirNota";
+import { ref, onValue } from "firebase/database";
+import { set } from "date-fns";
 
 export default function Dashboard() {
 	const { authUser, isLoading } = useAuth();
@@ -22,6 +25,43 @@ export default function Dashboard() {
 
 	const router = useRouter();
 
+	// useEffect(() => {
+	// 	const startRef = ref(rtdb, "nota/start");
+	// 	const finishRef = ref(rtdb, "nota/finish");
+
+	// 	// Check for authUser and isLoading
+	// 	if (!isLoading && !authUser) {
+	// 		router.push("/");
+	// 	} else {
+	// 		async function fetchNotas() {
+	// 			if (authUser) {
+	// 				setNotas(await getReceipts(authUser.uid, null));
+	// 				setIsLoadingNotas(false);
+	// 			}
+	// 		}
+
+	// 		fetchNotas();
+
+	// 		onValue(startRef, (snapshot) => {
+	// 			setIsLoadingNotas(snapshot.val());
+	// 		});
+
+	// 		onValue(finishRef, async (snapshot) => {
+	// 			if (snapshot.val() && authUser) {
+	// 				setNotas(await getReceipts(authUser.uid, null));
+	// 			}
+	// 		});
+	// 	}
+	// }, [authUser, isLoading]);
+
+	// monitora o status de start e finish
+	// useEffect(() => {
+	// 	const dbRef = ref(rtdb, "nota/start");
+	// 	onValue(dbRef, (snapshot) => {
+	// 		setIsLoadingNotas(snapshot.val());
+	// 	});
+	// }, []);
+
 	useEffect(() => {
 		if (!isLoading && !authUser) router.push("/");
 		async function fetchNotas() {
@@ -32,6 +72,15 @@ export default function Dashboard() {
 		}
 		fetchNotas();
 	}, [authUser, isLoading]);
+
+	useEffect(() => {
+		const dbRef = ref(rtdb, "nota/finish");
+		onValue(dbRef, async (snapshot) => {
+			if (snapshot.val()) {
+				window.location.reload();
+			}
+		});
+	}, []);
 
 	const filterNotas = async (filter) => {
 		console.log(filter);
@@ -56,18 +105,8 @@ export default function Dashboard() {
 				style={{ marginBottom: "50px" }}
 			>
 				{notas.map((nota) => {
-					return <NotaCard nota={nota} />;
+					return <NotaCard key={nota.id_ocr} nota={nota} />;
 				})}
-				{/* <NotaCard />
-				<NotaCard />
-				<NotaCard />
-				<NotaCard />
-				<NotaCard />
-				<NotaCard />
-				<NotaCard />
-				<NotaCard />
-				<NotaCard />
-				<NotaCard /> */}
 				<div className="h-3"></div>
 			</div>
 			<Fab
