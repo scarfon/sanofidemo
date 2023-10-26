@@ -21,9 +21,10 @@ import Typography from "@mui/material/Typography";
 import { Avatar, Button, IconButton, Modal, TextField } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import EditIcon from "@mui/icons-material/Edit";
+import TrashCIcon from "@mui/icons-material/Delete";
 import { format } from "date-fns";
 import Image from "next/image";
-import { updateReceipt } from "../../firebase/firestore";
+import { deleteReceipt, updateReceipt } from "../../firebase/firestore";
 
 export default function NotaCard({ nota }) {
 	const [openView, setOpenView] = React.useState(false);
@@ -52,6 +53,12 @@ export default function NotaCard({ nota }) {
 		handleCloseEdit();
 	};
 
+	const handleDelete = () => {
+		deleteReceipt(nota.id);
+		console.log("delete");
+		window.location.reload();
+	};
+
 	const handleInputChange = (event) => {
 		const { name, value } = event.target;
 		setEditedNota((prevNota) => ({
@@ -73,9 +80,19 @@ export default function NotaCard({ nota }) {
 							<Typography variant="body1">
 								{format(nota.transactionDate, "dd/MM/yy") || ""}
 							</Typography>
-							<Typography className="text-center" variant="body2">
-								{nota.tipo || "COMIDA"}
-							</Typography>
+							{nota.tipo && (
+								<Typography
+									className="text-center line-clamp-2"
+									variant="body2"
+								>
+									{nota.tipo}
+								</Typography>
+							)}
+							{nota.tipo_especial && (
+								<Typography className="font-bold text-center" variant="body2">
+									{nota.tipo_especial}
+								</Typography>
+							)}
 						</div>
 						<Typography
 							className="flex-grow "
@@ -95,14 +112,24 @@ export default function NotaCard({ nota }) {
 							>
 								<EditIcon />
 							</IconButton>
-							<IconButton
-								sx={{ padding: 0.5 }}
-								aria-label="info"
-								size="large"
-								onClick={handleOpenView}
-							>
-								<InfoIcon />
-							</IconButton>
+							<div className="flex flex-col">
+								<IconButton
+									sx={{ padding: 0.5 }}
+									aria-label="info"
+									size="large"
+									onClick={handleOpenView}
+								>
+									<InfoIcon />
+								</IconButton>
+								<IconButton
+									sx={{ padding: 0.5 }}
+									aria-label="info"
+									size="large"
+									onClick={handleDelete}
+								>
+									<TrashCIcon />
+								</IconButton>
+							</div>
 						</div>
 					</div>
 				</CardContent>
@@ -134,8 +161,17 @@ export default function NotaCard({ nota }) {
 							Data: {format(nota.transactionDate, "dd/MM/yy") || ""}
 						</Typography>
 						<Typography variant="body1" gutterBottom>
-							Tipo: {nota.tipo || "COMIDA"}
+							Hora: {format(nota.transactionDate, "HH:mm") || ""}{" "}
 						</Typography>
+						<Typography variant="body1" gutterBottom>
+							Tipo: {nota.tipo || ""}
+						</Typography>
+						{nota.tipo_especial && (
+							<Typography variant="body1" gutterBottom>
+								{" "}
+								{nota.tipo_especial}{" "}
+							</Typography>
+						)}
 						<Typography variant="body1" gutterBottom>
 							Pagamento: {nota.tipo_pagamento || ""}
 						</Typography>
